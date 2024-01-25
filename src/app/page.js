@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar";
-import Template_1 from "../../templates/Template_1";
 import { Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
@@ -9,8 +8,11 @@ export default function Home() {
     <div className="h-screen w-screen">
       <Navbar />
       <Container>
-        <Typography component="h2" color="grey" variant="h4">
+        <Typography component="h2" color="grey" variant="h4" py={1}>
           Templates
+        </Typography>
+        <Typography color="grey" variant="h6" pb={5}>
+          Select a Template to get started
         </Typography>
 
         <Grid container spacing={3}>

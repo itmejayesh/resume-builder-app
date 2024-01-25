@@ -3,7 +3,6 @@ import {
   AppBar,
   Box,
   Container,
-  CssBaseline,
   Divider,
   Drawer,
   IconButton,
@@ -53,6 +52,7 @@ function Navbar() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => {
+    e.stopPropagation();
     setMobileOpen(!mobileOpen);
   };
 
@@ -63,9 +63,7 @@ function Navbar() {
       mb={2}
       height={80}
     >
-      <Typography variant="h6" sx={{ my: 2 }}>
-        Resume Builder
-      </Typography>
+      <Typography sx={{ my: 2 }}>Resume Builder</Typography>
       <Divider />
       <List>
         {mobileNavItems.map((item) => (
@@ -141,7 +139,6 @@ function Navbar() {
       </AppBar>
       <Box component="nav">
         <Drawer
-          container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
