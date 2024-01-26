@@ -45,6 +45,8 @@ function page() {
 		},
 	});
 
+	const handleSubmit = () => {};
+
 	const handleNext = () => {
 		if (childError) {
 			console.log("Cannot proceed due to errors from child component", childError);
@@ -100,7 +102,9 @@ function page() {
 				<Grid2 xs={12} md={8}>
 					<ResponsivePaper elevation={3}>
 						<form>
-							{values.value == 0 && <PersonalInfo setChildError={setChildError} />}
+							{values.value == 0 && (
+								<PersonalInfo setChildError={setChildError} handleSubmit={handleSubmit} />
+							)}
 							{values.value == 1 && <WorkInfo />}
 							{values.value == 2 && <EducationInfo />}
 							{values.value == 3 && <ExperienceInfo />}

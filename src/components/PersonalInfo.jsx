@@ -3,22 +3,10 @@ import React, {useEffect} from "react";
 import {useFormik} from "formik";
 import {personInfoSchema} from "../../schema";
 
-const PersonalInfo = ({setChildError}) => {
+const PersonalInfo = ({setChildError, onSubmit}) => {
 	const theme = useTheme();
 
-	const onSubmit = (values, {setSubmitting}) => {
-		try {
-			// Your form submission logic here
-
-			console.log("Form submitted:", values);
-		} catch (error) {
-			console.error("Error submitting form:", error);
-		} finally {
-			// Set submitting to false to allow future submissions
-			setSubmitting(false);
-		}
-	};
-	const {values, handleBlur, handleChange, errors, handleSubmit, touched} = useFormik({
+	const {values, handleBlur, handleChange, errors, touched, handleSubmit} = useFormik({
 		initialValues: {
 			firstName: "",
 			lastName: "",
@@ -32,7 +20,6 @@ const PersonalInfo = ({setChildError}) => {
 			objective: "",
 		},
 		validationSchema: personInfoSchema,
-		onSubmit,
 	});
 
 	useEffect(() => {
