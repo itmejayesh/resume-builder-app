@@ -3,7 +3,7 @@ import React, {useEffect} from "react";
 import {useFormik} from "formik";
 import {personInfoSchema} from "../../schema";
 
-const PersonalInfo = ({setChildError, onSubmit}) => {
+const PersonalInfo = ({setChildError, handleFunction, triggerSubmit}) => {
 	const theme = useTheme();
 
 	const {values, handleBlur, handleChange, errors, touched, handleSubmit} = useFormik({
@@ -20,14 +20,25 @@ const PersonalInfo = ({setChildError, onSubmit}) => {
 			objective: "",
 		},
 		validationSchema: personInfoSchema,
+		onSubmit: (values) => {
+			handleFunction(values);
+		},
 	});
 
 	useEffect(() => {
 		setChildError(errors);
-	}, [errors, touched, setChildError]);
+	}, [errors, touched, setChildError, values]);
+
+	useEffect(() => {
+		// Check if the parent component requested to trigger form submission
+		if (triggerSubmit) {
+			// Call the handleSubmit function from Formik
+			handleSubmit();
+		}
+	}, [triggerSubmit, handleSubmit]);
 
 	return (
-		<Box>
+		<Box component={`form`} onSubmit={handleSubmit} noValidate>
 			<Stack
 				sx={{
 					borderBottom: "1px solid lightgrey",
@@ -46,6 +57,7 @@ const PersonalInfo = ({setChildError, onSubmit}) => {
 					Personal Information
 				</Typography>
 			</Stack>
+
 			<Grid container spacing={3}>
 				<Grid item xs={12} md={6}>
 					<TextField

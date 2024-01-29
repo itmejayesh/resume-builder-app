@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import {Button, Paper, Stack} from "@mui/material";
 import {styled} from "@mui/material/styles";
@@ -39,20 +39,38 @@ const ResponsivePaper = styled(Paper)`
 
 function page() {
 	const [childError, setChildError] = useState(null);
-	const {values, handleChange, error, setFieldValue} = useFormik({
+	const [triggerSubmit, setTriggerSubmit] = useState(false);
+	const {values, handleChange, setFieldValue} = useFormik({
 		initialValues: {
 			value: 0,
 		},
 	});
 
-	const handleSubmit = () => {};
+	const handleFunction = (values) => {
+		// Do something with the form values
+		console.log("Form values:", values);
+	};
+
+	const handleFormSubmission = () => {
+		// Set the state to trigger the form submission in the child component
+		setTriggerSubmit(true);
+	};
+
+	useEffect(() => {
+		// Check if the parent component requested to trigger form submission
+		if (triggerSubmit) {
+			// Reset triggerSubmit to false after handling it
+			setTriggerSubmit(false);
+		}
+	}, [triggerSubmit, values]);
 
 	const handleNext = () => {
-		if (childError) {
+		if (childError && Object.keys(childError).length > 0) {
 			console.log("Cannot proceed due to errors from child component", childError);
 			return;
-		} else if (values.value < 3) {
-			return setFieldValue("value", values.value + 1);
+		}
+		if (values.value < 3) {
+			setFieldValue("value", values.value + 1);
 		}
 	};
 
@@ -63,7 +81,7 @@ function page() {
 	};
 
 	return (
-		<>
+		<main>
 			<Navbar />
 			<Grid2 container justifyContent="center" spacing={1} sx={{width: `100%`}}>
 				<Grid2 xs={12} md={2} sx={{height: "100%"}}>
@@ -101,40 +119,45 @@ function page() {
 				</Grid2>
 				<Grid2 xs={12} md={8}>
 					<ResponsivePaper elevation={3}>
-						<form>
-							{values.value == 0 && (
-								<PersonalInfo setChildError={setChildError} handleSubmit={handleSubmit} />
-							)}
-							{values.value == 1 && <WorkInfo />}
-							{values.value == 2 && <EducationInfo />}
-							{values.value == 3 && <ExperienceInfo />}
+						{values.value == 0 && (
+							<PersonalInfo
+								setChildError={setChildError}
+								handleFunction={handleFunction}
+								triggerSubmit={triggerSubmit}
+							/>
+						)}
+						{values.value == 1 && <WorkInfo />}
+						{values.value == 2 && <EducationInfo />}
+						{values.value == 3 && <ExperienceInfo />}
 
-							<Stack
-								direction="row"
-								mt={3}
-								ml="auto"
-								sx={{borderTop: "1px solid lightgrey", paddingTop: 4}}
-								justifyContent="flex-end"
+						<Stack
+							direction="row"
+							mt={3}
+							ml="auto"
+							sx={{borderTop: "1px solid lightgrey", paddingTop: 4}}
+							justifyContent="flex-end"
+						>
+							<Button sx={{marginRight: 5}} variant="outlined" onClick={handleBack}>
+								Back
+							</Button>
+
+							<Button
+								sx={{
+									marginRight: 5,
+								}}
+								variant="outlined"
+								onClick={() => {
+									handleFormSubmission();
+									// handleNext();
+								}}
 							>
-								<Button sx={{marginRight: 5}} variant="outlined" onClick={handleBack}>
-									Back
-								</Button>
-
-								<Button
-									sx={{
-										marginRight: 5,
-									}}
-									variant="outlined"
-									onClick={handleNext}
-								>
-									{values.value === 3 ? `Preview` : `Next`}
-								</Button>
-							</Stack>
-						</form>
+								{values.value === 3 ? `Preview` : `Next`}
+							</Button>
+						</Stack>
 					</ResponsivePaper>
 				</Grid2>
 			</Grid2>
-		</>
+		</main>
 	);
 }
 
