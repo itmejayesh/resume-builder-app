@@ -40,6 +40,7 @@ const ResponsivePaper = styled(Paper)`
 function page() {
 	const [childError, setChildError] = useState(null);
 	const [triggerSubmit, setTriggerSubmit] = useState(false);
+	const [formValues, setFormValues] = useState({});
 	const {values, handleChange, setFieldValue} = useFormik({
 		initialValues: {
 			value: 0,
@@ -52,23 +53,22 @@ function page() {
 	};
 
 	const handleFormSubmission = () => {
-		// Set the state to trigger the form submission in the child component
 		setTriggerSubmit(true);
+		// Set the state to trigger the form submission in the child component
+		const isFormEmpty = Object.values(formValues).some((value) => value === "");
+		console.log(formValues);
+
+		if (isFormEmpty) {
+			// Form is empty, handle form submission logic
+			console.log("Form is empty", isFormEmpty);
+			// Additional logic if needed
+		} else {
+			// Form is not empty, proceed with the next step
+			handleNext();
+		}
 	};
 
-	useEffect(() => {
-		// Check if the parent component requested to trigger form submission
-		if (triggerSubmit) {
-			// Reset triggerSubmit to false after handling it
-			setTriggerSubmit(false);
-		}
-	}, [triggerSubmit, values]);
-
 	const handleNext = () => {
-		if (childError && Object.keys(childError).length > 0) {
-			console.log("Cannot proceed due to errors from child component", childError);
-			return;
-		}
 		if (values.value < 3) {
 			setFieldValue("value", values.value + 1);
 		}
@@ -78,6 +78,7 @@ function page() {
 		if (values.value > 0) {
 			setFieldValue("value", values.value - 1);
 		}
+		setTriggerSubmit(false);
 	};
 
 	return (
@@ -124,6 +125,7 @@ function page() {
 								setChildError={setChildError}
 								handleFunction={handleFunction}
 								triggerSubmit={triggerSubmit}
+								setFormValues={setFormValues}
 							/>
 						)}
 						{values.value == 1 && <WorkInfo />}
@@ -146,10 +148,7 @@ function page() {
 									marginRight: 5,
 								}}
 								variant="outlined"
-								onClick={() => {
-									handleFormSubmission();
-									// handleNext();
-								}}
+								onClick={handleFormSubmission}
 							>
 								{values.value === 3 ? `Preview` : `Next`}
 							</Button>

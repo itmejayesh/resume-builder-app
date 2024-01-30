@@ -2,32 +2,34 @@ import {Box, Grid, TextField, Typography, useTheme, Stack} from "@mui/material";
 import React, {useEffect} from "react";
 import {useFormik} from "formik";
 import {personInfoSchema} from "../../schema";
+import {useDispatch, useSelector} from "react-redux";
+import {setField} from "../features/prsonalInfo";
 
-const PersonalInfo = ({setChildError, handleFunction, triggerSubmit}) => {
+const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValues}) => {
 	const theme = useTheme();
+	const dispatch = useDispatch();
+	const personalInfo = useSelector((state) => state.personalInfo);
 
-	const {values, handleBlur, handleChange, errors, touched, handleSubmit} = useFormik({
-		initialValues: {
-			firstName: "",
-			lastName: "",
-			email: "",
-			mobile: "",
-			address: "",
-			city: "",
-			state: "",
-			postalCode: "",
-			dateOfBirth: "",
-			objective: "",
-		},
-		validationSchema: personInfoSchema,
-		onSubmit: (values) => {
-			handleFunction(values);
-		},
-	});
+	const {values, handleBlur, handleChange, errors, touched, handleSubmit, setValues} =
+		useFormik({
+			initialValues: personalInfo,
+			validationSchema: personInfoSchema,
+			onSubmit: (values) => {
+				console.log("Submitting form with values:", values);
+				dispatch(setField(values));
+			},
+		});
 
 	useEffect(() => {
 		setChildError(errors);
+		setFormValues(values);
 	}, [errors, touched, setChildError, values]);
+
+	useEffect(() => {
+		// Log the updated values in Redux to the console when personalInfo changes
+		console.log("Redux values:", personalInfo);
+		setValues(personalInfo);
+	}, [personalInfo, setValues]);
 
 	useEffect(() => {
 		// Check if the parent component requested to trigger form submission
