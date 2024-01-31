@@ -5,29 +5,25 @@ import {personInfoSchema} from "../../schema";
 import {useDispatch, useSelector} from "react-redux";
 import {setField} from "../features/prsonalInfo";
 
-const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValues}) => {
+const PersonalInfo = ({triggerSubmit, setFormValues}) => {
 	const theme = useTheme();
 	const dispatch = useDispatch();
-	const personalInfo = useSelector((state) => state.personalInfo);
+	const personalInfo = useSelector((state) => state.personalInfo.personalData);
 
-	const {values, handleBlur, handleChange, errors, touched, handleSubmit, setValues} =
-		useFormik({
-			initialValues: personalInfo,
-			validationSchema: personInfoSchema,
-			onSubmit: (values) => {
-				console.log("Submitting form with values:", values);
-				dispatch(setField(values));
-			},
-		});
+	const {values, handleBlur, errors, touched, handleSubmit, setValues, resetForm} = useFormik({
+		initialValues: personalInfo,
+		validationSchema: personInfoSchema,
+	});
+
+	const handleInputChange = (field, value) => {
+		dispatch(setField({field, value}));
+	};
 
 	useEffect(() => {
-		setChildError(errors);
 		setFormValues(values);
-	}, [errors, touched, setChildError, values]);
+	}, [errors, touched, values]);
 
 	useEffect(() => {
-		// Log the updated values in Redux to the console when personalInfo changes
-		console.log("Redux values:", personalInfo);
 		setValues(personalInfo);
 	}, [personalInfo, setValues]);
 
@@ -52,7 +48,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 					m={3}
 					sx={{
 						[theme.breakpoints.down("sm")]: {
-							fontSize: "2rem", // Adjust the font size for small screens
+							fontSize: "2rem",
 						},
 					}}
 				>
@@ -69,7 +65,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						fullWidth
 						value={values.firstName}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("firstName", e.target.value)}
 						error={errors.firstName && touched.firstName}
 					/>
 					{errors.firstName && touched.firstName && (
@@ -86,7 +82,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						fullWidth
 						value={values.lastName}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("lastName", e.target.value)}
 						error={errors.lastName && touched.lastName}
 					/>
 					{errors.lastName && touched.lastName && (
@@ -104,7 +100,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						fullWidth
 						value={values.email}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("email", e.target.value)}
 						error={errors.email && touched.email}
 					/>
 					{errors.email && touched.email && (
@@ -122,7 +118,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						fullWidth
 						value={values.mobile}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("mobile", e.target.value)}
 						error={errors.mobile && touched.mobile}
 					/>
 					{errors.mobile && touched.mobile && (
@@ -140,7 +136,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						multiline
 						value={values.address}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("address", e.target.value)}
 						error={errors.address && touched.address}
 					/>
 					{errors.address && touched.address && (
@@ -159,7 +155,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						multiline
 						value={values.city}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("city", e.target.value)}
 						error={errors.city && touched.city}
 					/>
 					{errors.city && touched.city && (
@@ -178,7 +174,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						multiline
 						value={values.state}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("state", e.target.value)}
 						error={errors.state && touched.state}
 					/>
 					{errors.state && touched.state && (
@@ -197,7 +193,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						multiline
 						value={values.postalCode}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("postalCode", e.target.value)}
 						error={errors.postalCode && touched.postalCode}
 					/>
 					{errors.postalCode && touched.postalCode && (
@@ -215,7 +211,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						multiline
 						value={values.dateOfBirth}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
 						error={errors.dateOfBirth && touched.dateOfBirth}
 					/>
 					{errors.dateOfBirth && touched.dateOfBirth && (
@@ -235,7 +231,7 @@ const PersonalInfo = ({setChildError, handleFunction, triggerSubmit, setFormValu
 						fullWidth
 						value={values.objective}
 						onBlur={handleBlur}
-						onChange={handleChange}
+						onChange={(e) => handleInputChange("objective", e.target.value)}
 						error={errors.objective && touched.objective}
 					/>
 					{errors.objective && touched.objective && (

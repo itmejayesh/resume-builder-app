@@ -38,7 +38,6 @@ const ResponsivePaper = styled(Paper)`
 `;
 
 function page() {
-	const [childError, setChildError] = useState(null);
 	const [triggerSubmit, setTriggerSubmit] = useState(false);
 	const [formValues, setFormValues] = useState({});
 	const {values, handleChange, setFieldValue} = useFormik({
@@ -47,16 +46,11 @@ function page() {
 		},
 	});
 
-	const handleFunction = (values) => {
-		// Do something with the form values
-		console.log("Form values:", values);
-	};
-
 	const handleFormSubmission = () => {
 		setTriggerSubmit(true);
 		// Set the state to trigger the form submission in the child component
 		const isFormEmpty = Object.values(formValues).some((value) => value === "");
-		console.log(formValues);
+		// console.log(formValues);
 
 		if (isFormEmpty) {
 			// Form is empty, handle form submission logic
@@ -78,6 +72,7 @@ function page() {
 		if (values.value > 0) {
 			setFieldValue("value", values.value - 1);
 		}
+
 		setTriggerSubmit(false);
 	};
 
@@ -121,12 +116,7 @@ function page() {
 				<Grid2 xs={12} md={8}>
 					<ResponsivePaper elevation={3}>
 						{values.value == 0 && (
-							<PersonalInfo
-								setChildError={setChildError}
-								handleFunction={handleFunction}
-								triggerSubmit={triggerSubmit}
-								setFormValues={setFormValues}
-							/>
+							<PersonalInfo triggerSubmit={triggerSubmit} setFormValues={setFormValues} />
 						)}
 						{values.value == 1 && <WorkInfo />}
 						{values.value == 2 && <EducationInfo />}
